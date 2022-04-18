@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:food_delivery_application/lib/widgets/small_text.dart';
+import 'package:food_delivery_application/widgets/small_text.dart';
 
 import '../utils/dimensions.dart';
 
