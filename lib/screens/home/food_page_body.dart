@@ -1,7 +1,11 @@
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:food_delivery_application/controllers/popular_product_controller.dart';
+import 'package:food_delivery_application/utils/app_constants.dart';
+import 'package:get/get.dart';
 
+import '../../model/products_model.dart';
 import '../../utils/colors.dart';
 import '../../utils/dimensions.dart';
 import '../../widgets/app_column.dart';
@@ -42,30 +46,42 @@ void dispose(){
     return Column(
       children:[
         //Slider Section
-        Container(
-        height: Dimensions.pageView,
-        child: PageView.builder(
-          //position and itemCount value is connected
-          controller: pageController,
-          itemCount: 5,
-            itemBuilder: (context,position){
-          return _buildPageItem(position);
-        }),
-      ),
+
+        //PopularProductController well bring data to ui
+        // and redraw the ui when data changes through GetBuilder
+        // GetBuilder will Create instance of controller like popularProducts
+        GetBuilder<PopularProductController>(
+            builder: (popularProducts){
+              return Container(
+                height: Dimensions.pageView,
+                child: PageView.builder(
+                  //position and itemCount value is connected
+                    controller: pageController,
+                    itemCount: popularProducts.popularProductList.length,
+                    itemBuilder: (context,position){
+                      print(popularProducts.popularProductList.length);
+                      return _buildPageItem(position,popularProducts.popularProductList[position]);
+                    }),
+              );
+
+            }
+        ),
 
         //dots
 
-        DotsIndicator(
-            dotsCount: 5,
+        GetBuilder<PopularProductController>(builder:(popularProducts){
+        return DotsIndicator(
+          dotsCount: popularProducts.popularProductList.isEmpty?1 : popularProducts.popularProductList.length ,
           position: _currPageValue,
           decorator:  DotsDecorator(
-            size: const Size.square(9.0),
-            activeColor: AppColors.mainColor,
-            activeSize: const Size(18.0,9.0),
-            activeShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0))
+              size: const Size.square(9.0),
+              activeColor: AppColors.mainColor,
+              activeSize: const Size(18.0,9.0),
+              activeShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0))
           ),
+        );
+        }
         ),
-
         //Popular Text
         SizedBox(height: Dimensions.height15*2,),
         Container(
@@ -172,7 +188,7 @@ void dispose(){
     );
   }
   //index is the position
-  Widget _buildPageItem(int index ){
+  Widget _buildPageItem(int index,ProductModel popularProduct ){
     Matrix4 matrix = new Matrix4.identity();
     if(index==_currPageValue.floor()){
       var currScale=1-(_currPageValue-index)*(1-_scaleFactor);
@@ -205,7 +221,7 @@ void dispose(){
                 color: index.isEven?Color(0xFF69c5fd):Color(0xFF9294cc),
                 image: DecorationImage(
                   fit: BoxFit.cover,
-                  image: AssetImage('assets/image/food0.png'),
+                  image: NetworkImage(AppConstants.BASE_URL+'/uploads/'+popularProduct.img!),
                 )
             ),
           ),
@@ -235,7 +251,7 @@ void dispose(){
               ),
               child: Container(
                 padding: EdgeInsets.only(top: Dimensions.height15,left: Dimensions.width15,right: Dimensions.width15),
-                child: AppColumn(text: 'Chinese Side',)
+                child: AppColumn(text: popularProduct.name!,)
               ),
             ),
           ),

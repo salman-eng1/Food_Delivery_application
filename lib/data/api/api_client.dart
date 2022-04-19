@@ -8,7 +8,7 @@ late Map<String,String> _mainHeaders;
 
 ApiClient({required this.appBaseUrl}){
   baseUrl = appBaseUrl;
-  timeout=const Duration(seconds: 30);
+  timeout=const Duration(seconds: 60);
   token=AppConstants.TOKEN;
   _mainHeaders={
     'Content-type':'application/json; charset=UTF-8',
