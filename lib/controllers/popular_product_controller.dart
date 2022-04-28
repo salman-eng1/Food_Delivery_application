@@ -7,17 +7,19 @@ class PopularProductController extends GetxController{
   PopularProductController({required this.popularProductRepo});
   List<dynamic> _popularProductList=[];
   List<dynamic> get popularProductList=>_popularProductList;
+  bool _isLoaded = false;
+  bool get isLoaded => _isLoaded;
+
 
   Future<void> getPopularProductList()async{
     Response response = await popularProductRepo.getPopularProductList();
     if(response.statusCode==200){
-      print('got products');
       _popularProductList=[];
-
       //here we should extract the data from json and store it in the model
       _popularProductList.addAll(Product.fromJson(response.body).products);
-      print(popularProductList);
 
+      // print(popularProductList);
+      _isLoaded=true;
       //update will refresh the page like set state
       update();
     }else{
