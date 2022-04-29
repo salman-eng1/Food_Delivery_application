@@ -116,7 +116,6 @@ void dispose(){
         GetBuilder<RecommendedProductController>(
           builder: (recommendedProduct) {
             return recommendedProduct.isLoaded? Container(
-              height: Dimensions.height10*90,
               child: ListView.builder(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
@@ -124,7 +123,7 @@ void dispose(){
                   itemBuilder: (context,index){
                     return GestureDetector(
                       onTap: (){
-                        Get.toNamed(RouteHelper.getRecommendedFood());
+                        Get.toNamed(RouteHelper.getRecommendedFood(index));
                       },
                       child: Container(
                         margin: EdgeInsets.only(left: Dimensions.width10*2,right: Dimensions.width10*2,bottom: Dimensions.height10),
@@ -163,7 +162,7 @@ void dispose(){
                                         text: recommendedProduct.recommendedProductList[index].name!,
                                       ),
                                       SizedBox(height: Dimensions.height10,),
-                                      SmallText(text: recommendedProduct.recommendedProductList[index].description!),
+                                      SmallText(text: recommendedProduct.recommendedProductList[index].description!,overflow:TextOverflow.ellipsis),
                                       SizedBox(height: Dimensions.height10,),
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -234,7 +233,7 @@ void dispose(){
         children: [
           GestureDetector(
             onTap: (){
-              Get.toNamed(RouteHelper.getPopularFood());
+              Get.toNamed(RouteHelper.getPopularFood(index));
             },
             child: Container(
               height: Dimensions.pageViewContainer,

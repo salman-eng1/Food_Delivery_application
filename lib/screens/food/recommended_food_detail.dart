@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery_application/controllers/recommended_product_controller.dart';
 import 'package:food_delivery_application/routes/route_helper.dart';
 import 'package:food_delivery_application/utils/colors.dart';
 import 'package:food_delivery_application/utils/dimensions.dart';
@@ -6,13 +7,16 @@ import 'package:food_delivery_application/widgets/app_icon.dart';
 import 'package:food_delivery_application/widgets/expandable_text_widget.dart';
 import 'package:get/get.dart';
 
+import '../../utils/app_constants.dart';
 import '../../widgets/big_text.dart';
 
 class RecommendedFoodDetail extends StatelessWidget {
-  const RecommendedFoodDetail({Key? key}) : super(key: key);
+  final int pageId;
+   const RecommendedFoodDetail({Key? key,required this.pageId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var product=Get.find<RecommendedProductController>().recommendedProductList[pageId];
     return Scaffold(
       backgroundColor: Colors.white,
       body: CustomScrollView(
@@ -32,7 +36,7 @@ class RecommendedFoodDetail extends StatelessWidget {
               preferredSize: Size.fromHeight(20),
               child: Container(
                 padding: EdgeInsets.only(top: 5,bottom: 10),
-                child: Center(child: BigText(text:'Chinese Side',size:Dimensions.font26)),
+                child: Center(child: BigText(text:product.name!,size:Dimensions.font26)),
                 width: double.maxFinite,
                 decoration: BoxDecoration(
                     color: Colors.white,
@@ -44,8 +48,8 @@ class RecommendedFoodDetail extends StatelessWidget {
             backgroundColor: AppColors.yellowColor,
             expandedHeight: 300,
             flexibleSpace: FlexibleSpaceBar(
-              background: Image.asset(
-                  'assets/image/food0.png',
+              background: Image.network(
+                AppConstants.BASE_URL+'/uploads/'+product.img!,
                 width: double.maxFinite,
                 fit: BoxFit.cover,
               ),
@@ -57,7 +61,7 @@ class RecommendedFoodDetail extends StatelessWidget {
                 Container(
                   margin:EdgeInsets.only(left: Dimensions.width10*2,right: Dimensions.width10*2),
                   child: ExpandableTextWidget(
-                      text:'Chicken marinated in a spiced voghurt is placed in a large pot fresh coriander cilantro ,then par boiled lightly spiced rice,Chicken marinated in a spiced voghurt is placed in a large pot,then layerd with fried onions, fresh coriander cilantro ,then par boiled lightly spiced rice,Chicken marinated in a spiced voghurt is placed in a large pot,then layerd with fried onions, fresh coriander cilantro ,then par boiled lightly spiced rice,Chicken marinated in a spiced voghurt is placed in a large pot,then layerd with fried onions, fresh coriander cilantro ,then par boiled lightly spiced rice,Chicken marinated in a spiced voghurt is placed in a large pot,then layerd with fried onions, fresh coriander cilantro ,then par boiled lightly spiced rice Chicken marinated in a spiced voghurt is placed in a large pot fresh coriander cilantro ,then par boiled lightly spiced rice,Chicken marinated in a spiced voghurt is placed in a large pot,then layerd with fried onions, fresh coriander cilantro ,then par boiled lightly spiced rice,Chicken marinated in a spiced voghurt is placed in a large pot,then layerd with fried onions, fresh coriander cilantro ,then par boiled lightly spiced rice,Chicken marinated in a spiced voghurt is placed in a large pot,then layerd with fried onions, fresh coriander cilantro ,then par boiled lightly spiced rice,Chicken marinated in a spiced voghurt is placed in a large pot,then layerd with fried onions, fresh coriander cilantro ,then par boiled lightly spiced rice Chicken marinated in a spiced voghurt is placed in a large pot fresh coriander cilantro ,then par boiled lightly spiced rice,Chicken marinated in a spiced voghurt is placed in a large pot,then layerd with fried onions, fresh coriander cilantro ,then par boiled lightly spiced rice,Chicken marinated in a spiced voghurt is placed in a large pot,then layerd with fried onions, fresh coriander cilantro ,then par boiled lightly spiced rice,Chicken marinated in a spiced voghurt is placed in a large pot,then layerd with fried onions, fresh coriander cilantro ,then par boiled lightly spiced rice,Chicken marinated in a spiced voghurt is placed in a large pot,then layerd with fried onions, fresh coriander cilantro ,then par boiled lightly spiced rice Chicken marinated in a spiced voghurt is placed in a large pot fresh coriander cilantro ,then par boiled lightly spiced rice,Chicken marinated in a spiced voghurt is placed in a large pot,then layerd with fried onions, fresh coriander cilantro ,then par boiled lightly spiced rice,Chicken marinated in a spiced voghurt is placed in a large pot,then layerd with fried onions, fresh coriander cilantro ,then par boiled lightly spiced rice,Chicken marinated in a spiced voghurt is placed in a large pot,then layerd with fried onions, fresh coriander cilantro ,then par boiled lightly spiced rice,Chicken marinated in a spiced voghurt is placed in a large pot,then layerd with fried onions, fresh coriander cilantro ,then par boiled lightly spiced rice '
+                      text: product.description!
                   ),
                 ),
 
@@ -80,7 +84,7 @@ class RecommendedFoodDetail extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 AppIcon(icon: Icons.remove,backgroundColor: AppColors.mainColor,iconColor: Colors.white,iconSize: Dimensions.iconSize24,),
-                BigText(text: '\$12.88 '+' X '+' 0 ',color: AppColors.mainBlackColor,size: Dimensions.font26,),
+                BigText(text: '\$ ${product.price}'+' X '+' 0 ',color: AppColors.mainBlackColor,size: Dimensions.font26,),
                 AppIcon(icon: Icons.add,backgroundColor: AppColors.mainColor,iconColor: Colors.white,iconSize: Dimensions.iconSize24,),
               ],
             ),
