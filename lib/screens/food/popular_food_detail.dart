@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery_application/controllers/cart_controller.dart';
 import 'package:food_delivery_application/controllers/popular_product_controller.dart';
+import 'package:food_delivery_application/screens/cart/cart_page.dart';
 import 'package:food_delivery_application/screens/home/main_food_page.dart';
 import 'package:food_delivery_application/utils/app_constants.dart';
 import 'package:get/get.dart';
@@ -62,9 +63,39 @@ class PopularFoodDetail extends StatelessWidget {
                     icon:Icons.arrow_back_ios
                 ),
               ),
-              AppIcon(
-                  icon:Icons.shopping_cart_outlined,
-              )
+              GetBuilder<PopularProductController>(builder: (controller){
+                return Stack(
+                  children: [
+                    GestureDetector(
+                      onTap:(){
+                        Get.to(()=>CartPage());
+                      },
+                      child: AppIcon(
+                        icon:Icons.shopping_cart_outlined,
+                      ),
+                    ),
+                    Get.find<PopularProductController>().totalItem>=1?
+                Positioned(
+                  right: 0,top:0,
+                  child: AppIcon(
+                    icon:Icons.circle,
+                    size: 20.0,
+                    iconColor: Colors.transparent,
+                    backgroundColor: AppColors.mainColor,
+                  ),
+                ) :Container(),
+                  Get.find<PopularProductController>().totalItem>=1?
+                Positioned(
+                right: 4,top:3,
+                child: BigText(text: Get.find<PopularProductController>().totalItem.toString(),
+                size:12,
+                color:Colors.white,
+
+                ),
+                ):Container()
+                  ],
+                );
+              }),
             ],
           ) ,
           ),
@@ -143,17 +174,20 @@ class PopularFoodDetail extends StatelessWidget {
                     ],
                   ),
                 ),
-                Container(
+                GestureDetector(
+                  onTap:(){
+                    popularProduct.addItem(product);
+                  },
+                  child: Container(
+                      child: BigText(text: '\$ ${product.price!} | Add to Cart',color: Colors.white,),
                   padding: EdgeInsets.only(top: Dimensions.height10*2,bottom: Dimensions.height10*2,left: Dimensions.width10*2,right: Dimensions.width10*2),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(Dimensions.radius20),
-                      color: AppColors.mainColor
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(Dimensions.radius20),
+                        color: AppColors.mainColor
+                    ),
+
+
                   ),
-                  child: GestureDetector(
-                      onTap:(){
-                        popularProduct.addItem(product);
-                      },
-                      child: BigText(text: '\$ ${product.price!} | Add to Cart',color: Colors.white,)),
                 ),
               ],
             ),

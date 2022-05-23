@@ -5,6 +5,8 @@ import 'package:food_delivery_application/model/products_model.dart';
 import 'package:food_delivery_application/utils/colors.dart';
 import 'package:get/get.dart';
 
+import '../model/cart_model.dart';
+
 class PopularProductController extends GetxController{
   final PopularProductRepo popularProductRepo;
   PopularProductController({required this.popularProductRepo});
@@ -26,12 +28,9 @@ class PopularProductController extends GetxController{
     Response response = await popularProductRepo.getPopularProductList();
     if(response.statusCode==200){
       _popularProductList=[];
-      //here we should extract the data from json and store it in the model
       _popularProductList.addAll(Product.fromJson(response.body).products);
 
-      // print(popularProductList);
       _isLoaded=true;
-      //update will refresh the page like set state
       update();
     }else{
 
@@ -43,16 +42,22 @@ class PopularProductController extends GetxController{
       _quantity=checkQuantity(_quantity+1);
     }else{
       _quantity=checkQuantity(_quantity-1);
+      print(inCartItems);
     }
     update();
   }
-
+//_inCartItems=2
+  //_quantity=0
   int checkQuantity(int quantity){
     if((_inCartItems+quantity) < 0 ){
       Get.snackbar("Item count", "you can't reduce more",
       backgroundColor: AppColors.mainColor,
       colorText: Colors.white,
       );
+      if(_inCartItems>0){
+        _quantity= -_inCartItems;
+        return _quantity;
+      }
       return 0;
     }else if((_inCartItems+quantity) > 20){
       Get.snackbar("Item count", "you can't add more",
@@ -81,19 +86,20 @@ class PopularProductController extends GetxController{
   }
 
   void addItem(ProductModel product){
-    //if (quantity>0){
       _cart.addItem(product, _quantity);
       _quantity=0;
       _inCartItems=_cart.getQuantity(product);
       _cart.items.forEach((key, value) {
         print('the key is ${value.id.toString()}'+'the quantity is${value.quantity.toString()}');
       });
-    //} else{
-    //   Get.snackbar("Item count", "you should at least add an item to the cart",
-    //     backgroundColor: AppColors.mainColor,
-    //     colorText: Colors.white,
-    //   );
-    // }
+
+    update();
   }
 
+  int get totalItem{
+    return _cart.totalItems;
+  }
+List<CartModel> get getItemes{
+    return _cart.getItems;
+}
 }
